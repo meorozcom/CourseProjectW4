@@ -56,7 +56,6 @@ names(Ext_Data)<-gsub("gravity", "Gravity", names(Ext_Data))
 Ext_Data <- arrange(Ext_Data, Activity)
 
 ## 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-FinalData <- Ext_Data %>%
-        group_by(Subject, Activity) %>%
-        summarise_all(funs(mean))
+file.create("FinalData.txt")
+FinalData <- aggregate( . ~ Subject + Activity, data = Ext_Data, FUN = mean )
 write.table(FinalData, "FinalData.txt", row.name=FALSE)
