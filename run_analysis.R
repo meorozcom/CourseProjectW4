@@ -52,6 +52,9 @@ names(Ext_Data)<-gsub("-freq()", "Frequency", names(Ext_Data), ignore.case = TRU
 names(Ext_Data)<-gsub("angle", "Angle", names(Ext_Data))
 names(Ext_Data)<-gsub("gravity", "Gravity", names(Ext_Data))
 
+## To have the activities in order
+Ext_Data <- arrange(Ext_Data, Activity)
+
 ## 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 FinalData <- Ext_Data %>%
         group_by(Subject, Activity) %>%
