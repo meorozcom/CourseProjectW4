@@ -1,3 +1,4 @@
+## 1. Downloading the dataset
 ##if the file doesn't exist it will download it
 if (!file.exists("Data.zip")) {
         fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
@@ -13,8 +14,8 @@ setwd("UCI HAR Dataset")
 
 library(dplyr) ##Calls dplyr, must download it before
 
+## 2.Assigning data to each variable
 ##obtain all the data frames for the project. I decided to put these here to avoid mistakes.
-##1
 feat <- read.table("features.txt", col.names = c("n","functions"))
 train_x <- read.table("train/X_train.txt", col.names = feat$functions)
 train_y <- read.table("train/y_train.txt", col.names = "Code")
@@ -24,19 +25,19 @@ sub_test <- read.table("test/subject_test.txt", col.names = "Subject")
 sub_train <- read.table("train/subject_train.txt", col.names = "Subject")
 act <- read.table("activity_labels.txt", col.names = c("Code", "Activity"))
 
-## 1. Merges the training and the test sets to create one data set.
+## 3. Merges the training and the test sets to create one data set.
 X <- rbind(train_x, test_x)
 Y <- rbind(train_y, test_y)
 subj <- rbind(sub_train, sub_test)
 Mgd_Data <- cbind(subj, Y, X)
 
-## 2. Extracts only the measurements on the mean and standard deviation for each measurement.
+## 4. Extracts only the measurements on the mean and standard deviation for each measurement.
 Ext_Data <- Mgd_Data %>% select(Subject, Code, contains("mean"), contains("std"))
 
-## 3. Uses descriptive activity names to name the activities in the data set
+## 5. Uses descriptive activity names to name the activities in the data set
 Ext_Data$Code <- act[Ext_Data$Code, 2]
 
-## 4. Appropriately labels the data set with descriptive variable names.
+## 6. Appropriately labels the data set with descriptive variable names.
 ## Better names to understand 
 names(Ext_Data)[2] = "Activity"
 names(Ext_Data)<-gsub("Acc", "Accelerometer", names(Ext_Data))
@@ -55,7 +56,7 @@ names(Ext_Data)<-gsub("gravity", "Gravity", names(Ext_Data))
 ## To have the activities in order
 Ext_Data <- arrange(Ext_Data, Activity)
 
-## 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+## 7. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 file.create("FinalData.txt")
 FinalData <- aggregate( . ~ Subject + Activity, data = Ext_Data, FUN = mean )
 write.table(FinalData, "FinalData.txt", row.name=FALSE)
